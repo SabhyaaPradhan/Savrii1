@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diasu Home Decors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- loader -->
+    <div class="container">
+        <div class="revealers">
+            <div class="revealer r-1"></div>
+            <div class="revealer r-2"></div>
+        </div>
+
+        <div class="images">
+            <div class="img"><img src="./assets/img1.jpeg" alt=""></div>
+            <div class="img"><img src="./assets/img2.jpeg" alt=""></div>
+            <div class="img"><img src="./assets/img3.jpeg" alt=""></div>
+            <div class="img"><img src="./assets/img4.jpeg" alt=""></div>
+            <div class="img"><img src="./assets/img5.jpeg" alt=""></div>
+            <div class="img main"><img src="./assets/img6.jpeg" alt=""></div>
+            <div class="img main"><img src="./assets/img7.jpeg" alt=""></div>
+            <div class="img main"><img src="./assets/img8.jpeg" alt=""></div>
+        </div>
+
+        <!-- Home -->
+
+        <div class="hero-content">
+            <div class="site-logo">
+                <div class="word">
+                    <h1>Diasu</h1>
+                </div>
+                <div class="word">
+                    <h1>Decors<sup>&copy;</sup></h1>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-item">
+                    <p>About</p>
+                </div>
+                <div class="nav-item">
+                    <p>Work</p>
+                </div>
+                <div class="nav-item">
+                    <p>Journal</p>
+                </div>
+                <div class="nav-item">
+                    <p>Contact</p>
+                </div>
+            </div>
+
+            <div class="cover-img">
+                <img src="./assets/img3.jpeg" alt="">
+            </div>
+
+            <div class="site-info">
+                <div class="row">
+                    <div class="col">
+                        <div class="line">
+                            <p>Featured Works</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h2>Diasu is a modern home decor brand brought to life through a clean, elegant design that
+                            reflects simplicity, style, and functionality.</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                        <div class="address">
+                            <div class="line">
+                                <p>Siliguri</p>
+                            </div>
+                            <div class="line">
+                                <p>West Bengal</p>
+                            </div>
+                            <div class="line">
+                                <p>India</p>
+                            </div>
+                        </div>
+                        <div class="socials">
+                            <div class="line">
+                                <p>Instagram</p>
+                            </div>
+                            <div class="line">
+                                <p>Facebook</p>
+                            </div>
+                            <div class="line">
+                                <p>diasuhomedecors@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marquee -->
+    <section class="scroll-marquee" id="marquee">
+        <div class="marquee-image">
+            <img src="./assets/img7.jpeg" alt="Decor Highlight">
+        </div>
+        <div class="marquee-track">
+            <p>Creative Studio · Interior Design · Art Direction ·</p>
+            <p>Creative Studio · Interior Design · Art Direction ·</p>
+        </div>
+    </section>
+
+
+
+    <!-- Hero Section -->
+  <section class="hero panel" data-color="black">
+    <div class="text-component">
+      <div class="text1">
+        <p>More than space. More than equipment. More content.</p>
+      </div>
+      <div class="text2">
+        <h2>A full production studio focused on delivering content at scale.</h2>
+      </div>
+    </div>
+  </section>
+
+
+    <script src="https://unpkg.com/gsap/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/gsap/dist/CustomEase.min.js"></script>
+    <script src="https://unpkg.com/gsap/dist/Flip.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script src="./script.js"></script>
+
+</body>
+
+</html>

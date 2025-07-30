@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Mossy hollow light theme */
+  --background: hsl(80, 20%, 96%);
+  --foreground: hsl(140, 15%, 15%);
+  --muted: hsl(85, 15%, 88%);
+  --muted-foreground: hsl(140, 10%, 45%);
+  --popover: hsl(80, 25%, 94%);
+  --popover-foreground: hsl(140, 15%, 15%);
+  --card: hsl(82, 22%, 92%);
+  --card-foreground: hsl(140, 15%, 15%);
+  --border: hsl(85, 12%, 82%);
+  --input: hsl(85, 12%, 85%);
+  --primary: hsl(115, 35%, 45%);
+  --primary-foreground: hsl(80, 20%, 96%);
+  --secondary: hsl(85, 18%, 85%);
+  --secondary-foreground: hsl(140, 15%, 25%);
+  --accent: hsl(90, 20%, 88%);
+  --accent-foreground: hsl(140, 15%, 25%);
+  --destructive: hsl(0, 75%, 55%);
+  --destructive-foreground: hsl(80, 20%, 96%);
+  --ring: hsl(115, 35%, 45%);
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Mossy hollow dark theme */
+  --background: hsl(140, 15%, 8%);
+  --foreground: hsl(85, 15%, 88%);
+  --muted: hsl(140, 12%, 18%);
+  --muted-foreground: hsl(85, 10%, 55%);
+  --popover: hsl(140, 15%, 10%);
+  --popover-foreground: hsl(85, 15%, 88%);
+  --card: hsl(140, 15%, 12%);
+  --card-foreground: hsl(85, 15%, 88%);
+  --border: hsl(140, 12%, 22%);
+  --input: hsl(140, 12%, 20%);
+  --primary: hsl(115, 40%, 55%);
+  --primary-foreground: hsl(140, 15%, 8%);
+  --secondary: hsl(140, 12%, 20%);
+  --secondary-foreground: hsl(85, 15%, 88%);
+  --accent: hsl(140, 12%, 25%);
+  --accent-foreground: hsl(85, 15%, 88%);
+  --destructive: hsl(0, 70%, 50%);
+  --destructive-foreground: hsl(85, 15%, 88%);
+  --ring: hsl(115, 40%, 55%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Typography - Playfair Display for headings, Inter for body text */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  p, span, div, a, button, input, textarea, label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* GSAP Revealer Animation Styles */
+  .revealers {
+    pointer-events: none;
+  }
+  
+  .revealer {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform-origin: top center;
+  }
+  
+  .revealer.r-1 {
+    z-index: 60;
+  }
+  
+  .revealer.r-2 {
+    z-index: 59;
+  }
+  
+  /* Accessibility: Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-block {
+      animation: none;
+    }
+    
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* Fallback for users without JavaScript */
+  .no-js .fixed.inset-0.z-50 {
+    display: none !important;
+  }
+
+  /* Import fonts - Inter for body, Playfair Display for headings, Poppins for Savrii logo */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+  /* Font utility classes */
+  .font-heading {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .font-body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  .font-logo {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Main headings styling */
+  .main-heading {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+
+  /* Body text styling */
+  .body-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+  }
+}
+
+
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .glassmorphism {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Testimonial transitions */
+.testimonial-fade-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.testimonial-fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.testimonial-fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.testimonial-fade-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease-in, transform 0.4s ease-in;
+}
+
+/* 3D Cube Canvas Styles */
+.three-cube-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.three-cube-canvas canvas {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Performance optimizations for 3D */
+@media (prefers-reduced-motion: reduce) {
+  .three-cube-canvas {
+    display: none;
+  }
+}
+
+/* Hide cube on very small screens for performance */
+@media (max-width: 480px) {
+  .three-cube-canvas canvas {
+    opacity: 0.3;
+  }
+}
+
+
