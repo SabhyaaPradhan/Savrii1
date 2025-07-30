@@ -12,8 +12,11 @@ declare module "express-session" {
   }
 }
 
-if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error("Missing required Google OAuth credentials: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET");
+// Check for Google OAuth credentials but don't crash the app if missing
+const hasGoogleCredentials = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
+
+if (!hasGoogleCredentials) {
+  console.warn("Warning: Google OAuth credentials not found. Google authentication will be disabled.");
 }
 
 export function getSession() {
@@ -55,32 +58,35 @@ const getCallbackURL = () => {
 };
 
 // Google OAuth Strategy
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID!,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  callbackURL: getCallbackURL()
-}, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
-  try {
-    // Extract user info from Google profile
-    const googleUser = {
-      id: profile.id,
-      email: profile.emails?.[0]?.value || "",
-      firstName: profile.name?.givenName || "",
-      lastName: profile.name?.familyName || "",
-      profileImageUrl: profile.photos?.[0]?.value || "",
-      accessToken,
-      refreshToken
-    };
+// Only set up Google OAuth strategy if credentials are available
+if (hasGoogleCredentials) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    callbackURL: getCallbackURL()
+  }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
+    try {
+      // Extract user info from Google profile
+      const googleUser = {
+        id: profile.id,
+        email: profile.emails?.[0]?.value || "",
+        firstName: profile.name?.givenName || "",
+        lastName: profile.name?.familyName || "",
+        profileImageUrl: profile.photos?.[0]?.value || "",
+        accessToken,
+        refreshToken
+      };
 
-    // Create or update user in database
-    const user = await storage.upsertUser(googleUser);
-    
-    return done(null, user);
-  } catch (error) {
-    console.error("Google auth error:", error);
-    return done(error, null);
-  }
-}));
+      // Create or update user in database
+      const user = await storage.upsertUser(googleUser);
+      
+      return done(null, user);
+    } catch (error) {
+      console.error("Google auth error:", error);
+      return done(error, null);
+    }
+  }));
+}
 
 // Serialize/deserialize user for session
 passport.serializeUser((user: any, done) => {
@@ -108,42 +114,54 @@ export async function setupAuth(app: Express) {
   app.use(passport.session());
 
   // Google OAuth routes
-  app.get("/auth/google", (req, res, next) => {
-    // Store return URL in session if provided
-    if (req.query.returnTo) {
-      req.session.returnTo = decodeURIComponent(req.query.returnTo as string);
-    }
-    
-    passport.authenticate("google", {
-      scope: ["profile", "email"]
-    })(req, res, next);
-  });
-
-  app.get("/auth/google/callback", 
-    passport.authenticate("google", { failureRedirect: "/auth?error=auth_failed" }),
-    (req, res) => {
-      // Successful authentication, redirect to callback page that will handle client-side routing
-      console.log("Authentication successful, user:", req.user);
-      console.log("Session ID:", req.sessionID);
+  // Only set up Google OAuth routes if credentials are available
+  if (hasGoogleCredentials) {
+    app.get("/auth/google", (req, res, next) => {
+      // Store return URL in session if provided
+      if (req.query.returnTo) {
+        req.session.returnTo = decodeURIComponent(req.query.returnTo as string);
+      }
       
-      // Save the session explicitly before redirecting
-      req.session.save((err) => {
-        if (err) {
-          console.error("Session save error:", err);
-          return res.redirect("/auth?error=session_error");
-        }
+      passport.authenticate("google", {
+        scope: ["profile", "email"]
+      })(req, res, next);
+    });
+
+    app.get("/auth/google/callback", 
+      passport.authenticate("google", { failureRedirect: "/auth?error=auth_failed" }),
+      (req, res) => {
+        // Successful authentication, redirect to callback page that will handle client-side routing
+        console.log("Authentication successful, user:", req.user);
+        console.log("Session ID:", req.sessionID);
         
-        // Check for return URL in session or query params
-        const returnTo = req.session.returnTo || req.query.returnTo || "/dashboard";
-        delete req.session.returnTo; // Clear it after use
-        
-        console.log("Redirecting to auth callback with returnTo:", returnTo);
-        
-        // Redirect to intermediate page that will handle client-side authentication
-        res.redirect(`/auth-callback?returnTo=${encodeURIComponent(returnTo)}`);
-      });
-    }
-  );
+        // Save the session explicitly before redirecting
+        req.session.save((err) => {
+          if (err) {
+            console.error("Session save error:", err);
+            return res.redirect("/auth?error=session_error");
+          }
+          
+          // Check for return URL in session or query params
+          const returnTo = req.session.returnTo || req.query.returnTo || "/dashboard";
+          delete req.session.returnTo; // Clear it after use
+          
+          console.log("Redirecting to auth callback with returnTo:", returnTo);
+          
+          // Redirect to intermediate page that will handle client-side authentication
+          res.redirect(`/auth-callback?returnTo=${encodeURIComponent(returnTo)}`);
+        });
+      }
+    );
+  } else {
+    // Provide fallback routes when Google OAuth is not configured
+    app.get("/auth/google", (req, res) => {
+      res.status(503).json({ error: "Google OAuth not configured" });
+    });
+
+    app.get("/auth/google/callback", (req, res) => {
+      res.status(503).json({ error: "Google OAuth not configured" });
+    });
+  }
 
   // Legacy login route for backward compatibility
   app.get("/api/login", (req, res) => {
