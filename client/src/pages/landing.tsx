@@ -77,7 +77,7 @@ const testimonials = [
     name: "David Park",
     role: "Marketing Director",
     company: "Growth Labs Inc",
-    content: "The AI responses are so natural that our customers often don't realize they're talking to an automated system. Incredible technology!",
+    content: "The AI responses are so natural that our customers often don't realize they are talking to an automated system. Incredible technology!",
     rating: 5
   },
   {
