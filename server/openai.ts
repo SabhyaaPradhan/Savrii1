@@ -1,8 +1,19 @@
 import Together from "together-ai";
 
-const together = new Together({ 
-  apiKey: process.env.TOGETHER_API_KEY
-});
+// Check if Together AI API key is available
+const hasTogetherApiKey = process.env.TOGETHER_API_KEY;
+
+if (!hasTogetherApiKey) {
+  console.warn("Warning: TOGETHER_API_KEY not found. AI response generation will be disabled.");
+}
+
+// Initialize Together AI client only if API key is available
+let together: Together | null = null;
+if (hasTogetherApiKey) {
+  together = new Together({ 
+    apiKey: process.env.TOGETHER_API_KEY
+  });
+}
 
 export interface GenerateReplyOptions {
   clientMessage: string;
@@ -29,6 +40,11 @@ export async function generateClientReply(
   const startTime = Date.now();
   
   try {
+    // Check if Together AI is available
+    if (!together) {
+      throw new Error("Together AI service is not available. Please configure TOGETHER_API_KEY.");
+    }
+
     // Simple, direct system prompt as requested
     const systemPrompt = "You are an AI assistant for customer support. Always respond clearly, directly, and helpfully to user messages. Avoid generic replies like 'Thank you for your message'. Address the question with specific solutions or actions.";
 
@@ -94,6 +110,15 @@ export async function analyzeSentiment(text: string): Promise<{
   confidence: number
 }> {
   try {
+    // Check if Together AI is available
+    if (!together) {
+      console.warn("Together AI not available for sentiment analysis, returning default values");
+      return {
+        rating: 3,
+        confidence: 0.5,
+      };
+    }
+
     const response = await together.chat.completions.create({
       model: "meta-llama/Llama-3-70b-chat-hf",
       messages: [
