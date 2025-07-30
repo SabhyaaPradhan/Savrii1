@@ -129,7 +129,7 @@ export default function Pricing() {
         title="Pricing Plans - Choose Your Perfect Plan | Savrii AI Platform"
         description="Transparent pricing for Savrii's AI-powered customer communication platform. Start with our free Starter plan or choose Pro/Unlimited for advanced features. 30-day money-back guarantee."
         keywords="Savrii pricing, AI customer support pricing, business communication plans, customer service platform cost, AI chatbot pricing"
-        canonicalUrl="https://www.savrii.com/pricing"
+        canonicalUrl="/pricing"
         structuredData={generatePricingStructuredData(currency.code, formatPrice)}
       />
       <Navbar />

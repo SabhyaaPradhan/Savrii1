@@ -21,21 +21,32 @@ app.get('/favicon.png', (req, res) => {
   res.sendFile(path.resolve('public/favicon.png'));
 });
 
-// Domain redirection middleware - redirect all traffic to www.savrii.com
-// Disabled in development to allow OAuth to work on replit domain
+// Domain redirection middleware - allow custom domains
+// Only redirect unwanted domains, not all domains
 app.use((req, res, next) => {
   const host = req.headers.host;
   const protocol = req.headers['x-forwarded-proto'] || 'https';
-  
-  // Only redirect in production and only for non-OAuth routes
-  if (process.env.NODE_ENV === 'production' && 
-      host && 
-      host !== 'www.savrii.com' && 
+
+  // List of allowed domains (add your custom domain here)
+  const allowedDomains = [
+    'www.savrii.com',
+    'savrii.com',
+    'localhost:5000',
+    'localhost:3000'
+    // Add your custom domain here, e.g., 'yourdomain.com', 'www.yourdomain.com'
+  ];
+
+  // Only redirect in production for specific unwanted domains
+  if (process.env.NODE_ENV === 'production' &&
+      host &&
+      !allowedDomains.some(domain => host.includes(domain)) &&
       !req.path.includes('/auth/') &&
-      !req.path.includes('/api/')) {
+      !req.path.includes('/api/') &&
+      // Only redirect clearly unwanted domains like default platform domains
+      (host.includes('.replit.dev') || host.includes('.repl.co'))) {
     return res.redirect(301, `https://www.savrii.com${req.url}`);
   }
-  
+
   next();
 });
 
