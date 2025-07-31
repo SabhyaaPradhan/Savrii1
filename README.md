@@ -92,7 +92,7 @@ The application will be available at `http://localhost:5000`
 ## 🏗 Project Structure
 
 ```
-savrii/
+Savrii1/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
@@ -166,7 +166,7 @@ savrii/
 4. Response generated with confidence scoring
 5. Usage statistics updated in database
 
-## 📈 Plan Management
+## �� Plan Management
 
 ### Subscription Tiers
 - **Starter Free**: 50 queries/day, 14-day trial
