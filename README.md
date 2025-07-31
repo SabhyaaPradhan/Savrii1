@@ -68,8 +68,8 @@ SESSION_SECRET=your_session_secret
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Sabhyaa-Pradhan/Savrii.git
-cd Savrii
+git clone https://github.com/sabhyaapradhan/Savrii1.git
+cd Savrii1
 ```
 
 2. **Install dependencies**
@@ -92,7 +92,7 @@ The application will be available at `http://localhost:5000`
 ## 🏗 Project Structure
 
 ```
-savrii/
+Savrii1/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
@@ -263,7 +263,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For support and questions:
 - Email: hello@savrii.com
 - Website: https://www.savrii.com
-- Documentation: [Project Wiki](https://github.com/your-username/savrii/wiki)
+- Documentation: [Project Wiki](https://github.com/sabhyaapradhan/Savrii1/wiki)
 
 ---
 
