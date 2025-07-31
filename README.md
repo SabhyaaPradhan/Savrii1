@@ -166,7 +166,7 @@ Savrii1/
 4. Response generated with confidence scoring
 5. Usage statistics updated in database
 
-## �� Plan Management
+## 📈 Plan Management
 
 ### Subscription Tiers
 - **Starter Free**: 50 queries/day, 14-day trial
@@ -263,7 +263,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For support and questions:
 - Email: hello@savrii.com
 - Website: https://www.savrii.com
-- Documentation: [Project Wiki](https://github.com/your-username/savrii/wiki)
+- Documentation: [Project Wiki](https://github.com/sabhyaapradhan/Savrii1/wiki)
 
 ---
 
