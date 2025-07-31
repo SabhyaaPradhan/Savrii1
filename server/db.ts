@@ -5,8 +5,11 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-const isDatabaseAvailable = !!process.env.DATABASE_URL &&
-  process.env.DATABASE_URL !== "postgresql://user:pass@localhost:5432/placeholder";
+// Check if real database URL is available before modifying it
+const originalDatabaseUrl = process.env.DATABASE_URL;
+const isDatabaseAvailable = !!originalDatabaseUrl &&
+  originalDatabaseUrl !== "postgresql://user:pass@localhost:5432/placeholder" &&
+  !originalDatabaseUrl.includes("localhost:5432");
 
 if (!isDatabaseAvailable) {
   console.warn("DATABASE_URL not properly configured. Some features will use fallback data.");
