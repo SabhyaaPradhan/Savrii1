@@ -68,8 +68,8 @@ SESSION_SECRET=your_session_secret
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Sabhyaa-Pradhan/Savrii.git
-cd Savrii
+git clone https://github.com/sabhyaapradhan/Savrii1.git
+cd Savrii1
 ```
 
 2. **Install dependencies**
