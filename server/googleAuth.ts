@@ -3,7 +3,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import connectPg from "connect-pg-simple";
+import MemoryStore from "memorystore";
 import { storage } from "./storage";
+import { isDatabaseAvailable } from "./db";
 
 // Extend Express session type to include returnTo
 declare module "express-session" {
@@ -21,16 +23,29 @@ if (!hasGoogleCredentials) {
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
-    ttl: sessionTtl,
-    tableName: "sessions",
-  });
-  
+
+  let sessionStore;
+
+  if (isDatabaseAvailable) {
+    // Use PostgreSQL store when database is available
+    const pgStore = connectPg(session);
+    sessionStore = new pgStore({
+      conString: process.env.DATABASE_URL,
+      createTableIfMissing: false,
+      ttl: sessionTtl,
+      tableName: "sessions",
+    });
+  } else {
+    // Use memory store when database is not available
+    console.log("Using memory store for sessions (database unavailable)");
+    const MemStore = MemoryStore(session);
+    sessionStore = new MemStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
+  }
+
   return session({
-    secret: process.env.SESSION_SECRET!,
+    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
     store: sessionStore,
     resave: true, // Force session save on every request
     saveUninitialized: true, // Save uninitialized sessions

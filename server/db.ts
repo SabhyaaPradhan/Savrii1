@@ -5,8 +5,15 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  console.warn("DATABASE_URL not set. Using placeholder to prevent crashes.");
+// Check if real database URL is available before modifying it
+const originalDatabaseUrl = process.env.DATABASE_URL;
+const isDatabaseAvailable = !!originalDatabaseUrl &&
+  originalDatabaseUrl !== "postgresql://user:pass@localhost:5432/placeholder" &&
+  !originalDatabaseUrl.includes("localhost:5432");
+
+if (!isDatabaseAvailable) {
+  console.warn("DATABASE_URL not properly configured. Some features will use fallback data.");
+  // Set a dummy URL to prevent crashes, but we'll handle errors gracefully
   process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/placeholder";
 }
 
@@ -17,3 +24,6 @@ export const pool = new Pool({
 });
 
 export const db = drizzle({ client: pool, schema });
+
+// Export flag to check if database is available
+export { isDatabaseAvailable };
