@@ -3,7 +3,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import connectPg from "connect-pg-simple";
+import MemoryStore from "memorystore";
 import { storage } from "./storage";
+import { isDatabaseAvailable } from "./db";
 
 // Extend Express session type to include returnTo
 declare module "express-session" {
