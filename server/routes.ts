@@ -77,11 +77,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: req.user.id,
         email: req.user.email || '',
         firstName: req.user.firstName || '',
-        lastName: req.user.lastName || ''
+        lastName: req.user.lastName || '',
+        plan: 'starter', // Default plan when database is unavailable
+        trialEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 14 days from now
       });
     } catch (error) {
       console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Failed to fetch user" });
+      }
     }
   });
 
