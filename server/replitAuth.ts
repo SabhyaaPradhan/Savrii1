@@ -8,14 +8,21 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
-}
-
 // Use custom domain for production, fall back to REPLIT_DOMAINS for development
 const CUSTOM_DOMAIN = "www.savrii.com";
+const DEFAULT_DEV_DOMAIN = "localhost:5000";
+
 const getDomains = () => {
   const replitDomains = process.env.REPLIT_DOMAINS || "";
+
+  // If REPLIT_DOMAINS is not set (development), use localhost
+  if (!replitDomains) {
+    if (process.env.NODE_ENV === "production") {
+      return [CUSTOM_DOMAIN];
+    }
+    return [DEFAULT_DEV_DOMAIN, CUSTOM_DOMAIN];
+  }
+
   // In production, prioritize custom domain
   if (process.env.NODE_ENV === "production") {
     return [CUSTOM_DOMAIN, ...replitDomains.split(",")];
@@ -26,9 +33,10 @@ const getDomains = () => {
 
 const getOidcConfig = memoize(
   async () => {
+    const replId = process.env.REPL_ID || "dev-client";
     return await client.discovery(
       new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
+      replId
     );
   },
   { maxAge: 3600 * 1000 }
@@ -44,7 +52,7 @@ export function getSession() {
     tableName: "sessions",
   });
   return session({
-    secret: process.env.SESSION_SECRET!,
+    secret: process.env.SESSION_SECRET || "dev-session-secret-change-in-production",
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
@@ -145,7 +153,7 @@ export async function setupAuth(app: Express) {
       const currentHost = req.get('host') || req.hostname;
       res.redirect(
         client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
+          client_id: process.env.REPL_ID || "dev-client",
           post_logout_redirect_uri: `${req.protocol}://${currentHost}`,
         }).href
       );
