@@ -153,7 +153,7 @@ export async function setupAuth(app: Express) {
       const currentHost = req.get('host') || req.hostname;
       res.redirect(
         client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
+          client_id: process.env.REPL_ID || "dev-client",
           post_logout_redirect_uri: `${req.protocol}://${currentHost}`,
         }).href
       );
