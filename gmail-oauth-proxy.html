@@ -67,14 +67,14 @@
 
         if (error) {
             // Handle OAuth error
-            window.location.href = 'https://63fdb543-6b9f-4796-92d9-980d5a2c95a1-00-2r8z5z1khoka3.janeway.replit.dev/integrations?error=gmail_auth_failed';
+            window.location.href = '/integrations?error=gmail_auth_failed';
         } else if (code && state) {
             // Forward OAuth callback to actual server
-            const callbackUrl = `https://63fdb543-6b9f-4796-92d9-980d5a2c95a1-00-2r8z5z1khoka3.janeway.replit.dev/api/email/auth/gmail/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+            const callbackUrl = `/api/email/auth/gmail/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
             window.location.href = callbackUrl;
         } else {
             // No valid parameters, redirect to integrations
-            window.location.href = 'https://63fdb543-6b9f-4796-92d9-980d5a2c95a1-00-2r8z5z1khoka3.janeway.replit.dev/integrations?error=gmail_auth_failed';
+            window.location.href = '/integrations?error=gmail_auth_failed';
         }
     </script>
 </body>

@@ -24,26 +24,39 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      // For email authentication, redirect to Google OAuth
+      // For email authentication, we'll use the server's login endpoint
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Authentication failed');
+      }
+      
       toast({
-        title: "Authentication",
-        description: "Redirecting to Google sign-in...",
+        title: "Success",
+        description: "Login successful! Redirecting...",
       });
       
       // Get return URL from current page URL
       const urlParams = new URLSearchParams(window.location.search);
-      const returnTo = urlParams.get('returnTo');
+      const returnTo = urlParams.get('returnTo') || '/';
       
+      // Redirect after successful login
       setTimeout(() => {
-        const authUrl = returnTo 
-          ? `/auth/google?returnTo=${encodeURIComponent(returnTo)}`
-          : "/auth/google";
-        window.location.href = authUrl;
+        window.location.href = returnTo;
       }, 1000);
     } catch (error) {
       toast({
         title: "Error",
-        description: "Authentication failed. Please try again.",
+        description: error instanceof Error ? error.message : "Authentication failed. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -56,15 +69,13 @@ export default function Auth() {
       title: "Google Sign-In",
       description: "Redirecting to secure authentication...",
     });
-    
     // Get return URL from current page URL
     const urlParams = new URLSearchParams(window.location.search);
     const returnTo = urlParams.get('returnTo');
-    
     setTimeout(() => {
       const authUrl = returnTo 
-        ? `/auth/google?returnTo=${encodeURIComponent(returnTo)}`
-        : "/auth/google";
+        ? `/api/auth/google?returnTo=${encodeURIComponent(returnTo)}`
+        : "/api/auth/google";
       window.location.href = authUrl;
     }, 500);
   };

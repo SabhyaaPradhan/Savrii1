@@ -33,7 +33,7 @@ out/
 ehthumbs.db
 Thumbs.db
 
-# Replit specific
+# Development specific
 .replit
 replit.nix
 .config/

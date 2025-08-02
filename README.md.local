@@ -1,0 +1,60 @@
+# Local Development Setup
+
+## Environment Variables
+
+This project requires several environment variables to be set up correctly. Follow these steps to configure your local environment:
+
+1. Create a `.env` file in the root directory of the project based on the `.env.example` file.
+
+2. Set the following required environment variables in your `.env` file:
+
+   ```
+   # Supabase Database Configuration
+   DATABASE_URL=postgresql://postgres:password@localhost:5432/savrii
+
+   # OpenAI API Configuration
+   OPENAI_API_KEY=your-openai-api-key
+
+   # Together.ai API Configuration
+   TOGETHER_API_KEY=your-together-api-key
+
+   # Session Management
+   SESSION_SECRET=a-very-secure-random-session-secret-for-development
+
+   # Google OAuth Configuration (if using Google authentication)
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+   # Optional: Additional Environment Variables
+   NODE_ENV=development
+   PORT=3000
+   ```
+
+3. For development purposes, you can use placeholder values for API keys if you don't have actual keys yet.
+
+## Running the Application
+
+After setting up your environment variables, you can run the application using:
+
+```bash
+npm run dev
+```
+
+This will start the development server with the correct environment variables loaded.
+
+## Troubleshooting
+
+If you encounter issues with environment variables not being loaded:
+
+1. Make sure your `.env` file is in the root directory of the project.
+2. Check that the format of your `.env` file is correct (no spaces around the equals sign, no quotes around values unless they contain spaces).
+3. Try running the application with the `-r dotenv/config` flag: `npx cross-env NODE_ENV=development tsx -r dotenv/config server/index.ts`
+
+## Database Setup
+
+If you're using a local PostgreSQL database:
+
+1. Make sure PostgreSQL is installed and running on your machine.
+2. Create a database named `savrii`.
+3. Update the `DATABASE_URL` in your `.env` file with the correct credentials.
+4. Run `npm run db:push` to initialize the database schema.

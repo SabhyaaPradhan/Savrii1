@@ -13,7 +13,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Session storage table.
-// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
+// (IMPORTANT) This table is mandatory for session storage, don't drop it.
 export const sessions = pgTable(
   "sessions",
   {
@@ -25,7 +25,7 @@ export const sessions = pgTable(
 );
 
 // User storage table.
-// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
+// (IMPORTANT) This table is mandatory for user authentication, don't drop it.
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
@@ -112,6 +112,29 @@ export type EmailIntegration = typeof emailIntegrations.$inferSelect;
 export type EmailMessage = typeof emailMessages.$inferSelect;
 export type InsertEmailIntegration = typeof emailIntegrations.$inferInsert;
 export type InsertEmailMessage = typeof emailMessages.$inferInsert;
+
+// Email AI Replies table for tracking AI-generated email responses
+export const emailAiReplies = pgTable("email_ai_replies", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  emailId: integer("email_id").references(() => emailMessages.id).notNull(),
+  replyType: varchar("reply_type").notNull(), // apology, order_update, refund_request, upsell, custom
+  customInstructions: text("custom_instructions"), // For custom reply type
+  generatedReply: text("generated_reply").notNull(),
+  finalReply: text("final_reply"), // After editing
+  confidence: integer("confidence").default(80), // 0-100
+  generationTime: integer("generation_time").default(0), // milliseconds
+  wasEdited: boolean("was_edited").default(false),
+  status: varchar("status").default("draft"), // draft, sent, failed
+  sentAt: timestamp("sent_at"),
+  sentMessageId: varchar("sent_message_id"), // External message ID after sending
+  deliveryStatus: varchar("delivery_status").default("pending"), // pending, sent, delivered, failed
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type EmailAiReply = typeof emailAiReplies.$inferSelect;
+export type UpsertEmailAiReply = typeof emailAiReplies.$inferInsert;
 
 // Workflows table for automation workflows
 export const workflows = pgTable("workflows", {
@@ -341,7 +364,7 @@ export const customerMessages = pgTable("customer_messages", {
   messageId: varchar("message_id"), // External message ID from channel
   isRead: boolean("is_read").default(false),
   deliveryStatus: varchar("delivery_status").default("pending"), // pending, sent, delivered, failed
-  replyToMessageId: integer("reply_to_message_id").references(() => customerMessages.id),
+  replyToMessageId: integer("reply_to_message_id"), // Self-reference will be handled in migration
   attachments: jsonb("attachments").default('[]'), // File attachments
   metadata: jsonb("metadata").default('{}'),
   createdAt: timestamp("created_at").defaultNow(),

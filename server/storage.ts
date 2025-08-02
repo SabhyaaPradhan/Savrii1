@@ -97,7 +97,7 @@ import { eq, and, gte, desc, count, sum, avg, lte, sql, isNotNull, lt } from "dr
 // Interface for storage operations
 export interface IStorage {
   // User operations
-  // (IMPORTANT) these user operations are mandatory for Replit Auth.
+  // (IMPORTANT) these user operations are mandatory for authentication.
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserPlan(userId: string, plan: string, trialEnd?: Date): Promise<User>;
@@ -279,11 +279,15 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   // User operations
-  // (IMPORTANT) these user operations are mandatory for Replit Auth.
+  // (IMPORTANT) these user operations are mandatory for authentication.
 
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
+  }
+  
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.getUser(id);
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
@@ -301,7 +305,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Then try to find existing user by email
-    const existingUser = await db.select().from(users).where(eq(users.email, userData.email)).limit(1);
+    const existingUser = await db.select().from(users).where(eq(users.email, userData.email || '')).limit(1);
     
     if (existingUser.length > 0) {
       // Update existing user

@@ -1,9 +1,5 @@
 # Deployment Guide for Savrii
 
-## Quick Deploy to Replit
-
-[![Deploy on Replit](https://replit.com/badge)](https://replit.com/new/github/your-username/savrii)
-
 ## Prerequisites Setup
 
 ### 1. Supabase Database Setup
@@ -19,7 +15,7 @@
 3. Copy the key (starts with `sk-`)
 
 ### 3. Environment Variables
-Set these in Replit Secrets or your hosting environment:
+Set these in your hosting environment:
 
 ```bash
 DATABASE_URL=postgresql://postgres.xxxxx:[PASSWORD]@aws-0-us-west-1.pooler.supabase.com:6543/postgres
@@ -29,59 +25,25 @@ SESSION_SECRET=your-secure-random-session-secret
 
 ## Deployment Steps
 
-### For Replit Hosting
+### For Other Hosting Providers
 
 1. **Import Repository**
    - Fork this repository to your GitHub
-   - Connect it to Replit
-   - Or use the deploy button above
 
 2. **Configure Environment**
-   - Add the three environment variables to Replit Secrets
-   - They will be available as environment variables
+   - Add the three environment variables to your hosting environment
 
 3. **Initialize Database**
    ```bash
    npm run db:push
    ```
 
-4. **Start Application**
-   ```bash
-   npm run dev
-   ```
-
-5. **Deploy**
-   - Click "Deploy" in Replit
-   - Your app will be available at `https://your-repl-name.your-username.repl.co`
-
-### For Custom Hosting
-
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/your-username/savrii.git
-   cd savrii
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup**
-   - Create `.env` file with the required variables
-   - Or configure them in your hosting platform
-
-4. **Database Migration**
-   ```bash
-   npm run db:push
-   ```
-
-5. **Build Application**
+4. **Build Application**
    ```bash
    npm run build
    ```
 
-6. **Start Production Server**
+5. **Start Production Server**
    ```bash
    npm start
    ```
@@ -102,7 +64,7 @@ If using a custom domain, update these files:
 - Update authentication callback URLs
 
 ### 3. Production Optimizations
-- Enable HTTPS (handled automatically by Replit)
+- Enable HTTPS (configure SSL certificates)
 - Configure error monitoring
 - Set up backup schedules for database
 - Monitor API usage and costs
@@ -122,12 +84,12 @@ If using a custom domain, update these files:
    - Monitor rate limits
 
 3. **Authentication Issues**
-   - Check Replit Auth configuration
+   - Check authentication configuration
    - Verify callback URLs match deployment domain
    - Clear browser cache/cookies
 
 ### Support Resources
-- [Replit Deployments Guide](https://docs.replit.com/deployments)
+- [GitHub Pages Deployment Guide](https://docs.github.com/en/pages)
 - [Supabase Documentation](https://supabase.com/docs)
 - [OpenAI API Documentation](https://platform.openai.com/docs)
 

@@ -4,6 +4,15 @@ import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from 'url';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+// Log environment variables for debugging
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('TOGETHER_API_KEY:', process.env.TOGETHER_API_KEY);
+console.log('SESSION_SECRET:', process.env.SESSION_SECRET);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,16 +31,14 @@ app.get('/favicon.png', (req, res) => {
 });
 
 // Domain redirection middleware - redirect all traffic to www.savrii.com
-// Disabled in development to allow OAuth to work on replit domain
 app.use((req, res, next) => {
   const host = req.headers.host;
   const protocol = req.headers['x-forwarded-proto'] || 'https';
   
-  // Only redirect in production and only for non-OAuth routes
+  // Only redirect in production and only for non-API routes
   if (process.env.NODE_ENV === 'production' && 
       host && 
       host !== 'www.savrii.com' && 
-      !req.path.includes('/auth/') &&
       !req.path.includes('/api/')) {
     return res.redirect(301, `https://www.savrii.com${req.url}`);
   }
@@ -98,15 +105,10 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  const port = parseInt(process.env.PORT || '3000', 10);
   server.listen({
     port,
     host: "0.0.0.0",
-    reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
   });

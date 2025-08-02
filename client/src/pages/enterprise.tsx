@@ -333,7 +333,7 @@ export default function Enterprise() {
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
                 <span className="font-medium">Response Time</span>
-                <Badge className="bg-orange-100 text-orange-700">< 1 Hour</Badge>
+                <Badge className="bg-orange-100 text-orange-700">&lt; 1 Hour</Badge>
               </div>
               <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <span className="font-medium">Account Manager</span>
